@@ -1,0 +1,38 @@
+# Python
+backend/.venv/
+backend/__pycache__/
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+**/.mypy_cache/
+*.egg-info/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Electron
+out/
+dist/
+release/
+build/icon.iconset/
+
+# Env & local data
+.env
+.env.local
+*.db
+*.db-journal
+.daybook/
+data/
+scripts/project-path.txt
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+Thumbs.db
+*.log

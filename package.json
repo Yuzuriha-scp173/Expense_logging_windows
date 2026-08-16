@@ -1,0 +1,66 @@
+{
+  "name": "daybook",
+  "productName": "Daybook",
+  "version": "1.0.0",
+  "description": "Windows version of Daybook — a simple AI-powered personal expense journal",
+  "main": "electron/main.cjs",
+  "private": true,
+  "scripts": {
+    "backend": "cd backend && .venv\\Scripts\\python.exe -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8765",
+    "frontend": "cd frontend && npm run dev",
+    "electron": "wait-on http-get://127.0.0.1:8765/api/health http-get://127.0.0.1:5173 && electron .",
+    "dev": "concurrently -k \"npm run backend\" \"npm run frontend\" \"npm run electron\"",
+    "dev:web": "concurrently -k \"npm run backend\" \"npm run frontend\"",
+    "test": "cd backend && .venv\\Scripts\\python.exe -m pytest -q",
+    "build:ui": "cd frontend && npm run build",
+    "build:win": "npm run build:ui && electron-builder --win",
+    "install:desktop": "npm run build:ui && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-desktop-app.ps1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.daybook.windows",
+    "productName": "Daybook",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "backend",
+        "to": "backend",
+        "filter": ["**/*", "!.venv/**", "!**/__pycache__/**", "!**/*.pyc"]
+      },
+      {
+        "from": "frontend/dist",
+        "to": "ui"
+      }
+    ],
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Daybook"
+    }
+  }
+}
